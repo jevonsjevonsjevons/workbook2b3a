@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Home</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: black;
+        color: white;
+        font-family: Helvetica, Arial, sans-serif;
+      }
+      .message-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+      }
+      .prompt {
+        font-size: 32px;
+        background-color: rgba(0, 0, 0, 1);
+        color: white;
+        padding: 20px 40px;
+        border: 3px solid white;
+        display: inline-block;
+        margin-bottom: 20px;
+      }
+      .mic-prompt {
+        font-size: 18px;
+        color: #ccc;
+        font-style: italic;
+        margin-top: 10px;
+      }
+    </style>
+    <!-- p5 Libraries -->
+    <script src="libraries/p5.min.js"></script>
+    <script src="libraries/p5.sound.min.js"></script>
+    <script src="libraries/p5.speech.js"></script>
+    <!-- Your Sketch -->
+    <script src="spiral.js"></script>
+  </head>
+  <body>
+    <div class="message-container">
+      <div class="prompt" id="promptText">You want me to pass this class so bad. Say YES to affirm.</div>
+    </div>
+  </body>
+</html>
