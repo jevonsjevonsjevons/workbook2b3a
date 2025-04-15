@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<!-- I used chatgpt as a teacher/helper when writing this code, especially for the flexrow grid system in displaying information, and the animated effects. I found websites with similar UI and described the differences i wanted made, which chatgpt helped me bring to life -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Workbook</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+      background: white;
+      padding: 20px;
+      cursor: none;
+    }
+    #custom-cursor {
+      position: fixed;
+      top: 0; left: 0;
+      width: 12px; height: 12px;
+      background-color: black;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10000;
+      transition: transform 0.1s ease, background-color 0.2s ease, border 0.2s ease;
+    }
+    .banner {
+      width: 100%; overflow: hidden; white-space: nowrap;
+      background: black; color: white;
+      padding: 10px 0; margin-bottom: 30px;
+      font-size: 1rem;
+    }
+    .banner p {
+      display: inline-block;
+      animation: scroll 15s linear infinite;
+    }
+    @keyframes scroll {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+    .card {
+      border: 1px solid #ccc;
+      display: flex;
+      flex-direction: column;
+      height: 420px;
+      cursor: pointer;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeIn 0.8s ease forwards;
+    }
+    .card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+    }
+    .card:nth-child(n) {
+      animation-delay: calc(0.1s * var(--i));
+    }
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .title {
+      background: white;
+      padding: 15px;
+      font-weight: bold;
+      font-size: 1.25rem;
+      border-bottom: 1px solid #ccc;
+    }
+    .thumb {
+      flex-grow: 1;
+      background: #eaeaea;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .card:hover .thumb img {
+      transform: scale(1.1);
+    }
+    .desc {
+      background: white;
+      padding: 15px;
+      font-size: 1rem;
+      border-top: 1px solid #ccc;
+    }
+    .expanded {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: white;
+      z-index: 999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px;
+    }
+    .expanded iframe,
+    .expanded img {
+      width: 100%; height: 100%;
+      max-width: 100vw; max-height: 100vh;
+      border: none;
+      object-fit: contain;
+    }
+    .expanded button {
+      align-self: flex-end;
+      font-size: 1rem;
+      padding: 8px 16px;
+      background: #222; color: white;
+      border: none;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    .expanded h2 {
+      font-size: 2rem;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="banner">
+    <p>Please don’t fail me again pls xoxo – Please don’t fail me again pls xoxo – Please don’t fail me again pls xoxo –</p>
+  </div>
+<!-- the majority of chatgpt's work -->
+  <main class="grid">
+    <!-- Static JPEG Projects -->
+    <div class="card" onclick="expandImage('Artboard4.jpg', 'Light Beams In-Class Excercise')">
+      <div class="title">Light Beams In-Class Excercise</div>
+      <div class="thumb"><img src="img/Artboard4.jpg" alt="Light Beams In-Class Excercise"></div>
+      <div class="desc">Basic html and css</div>
+    </div>
+
+    <div class="card" onclick="expandImage('Artboard5.jpg', 'Amazing race')">
+      <div class="title">Amazing race</div>
+      <div class="thumb"><img src="img/Artboard5.jpg" alt="Amazing race"></div>
+      <div class="desc">Basic html structure</div>
+    </div>
+
+    <div class="card" onclick="expandImage('Artboard6.jpg', 'Crazy 8s')">
+      <div class="title">Crazy 8s</div>
+      <div class="thumb"><img src="img/Artboard6.jpg" alt="Crazy 8s"></div>
+      <div class="desc">Rapid wireframe prototyping</div>
+    </div>
+
+    <div class="card" onclick="expandImage('Excercise1.jpeg', 'What\'s in my bag')">
+      <div class="title">What's in my bag</div>
+      <div class="thumb"><img src="img/Excercise1.jpeg" alt="What's in my bag"></div>
+      <div class="desc">From moral to least moral spectrum</div>
+    </div>
+
+    <!-- Interactive p5.js Projects -->
+    <!-- From Karen Ann's code snippets library on canvas -->
+    <div class="card" onclick="expandManualIframe('Rainbow dot self portrait', 'Excercises/Excercise2/index.html')">
+      <div class="title">Rainbow dot self portrait</div>
+      <div class="thumb"><img src="img/Excercise2.jpeg" alt="Rainbow dot self portrait"></div>
+      <div class="desc">Dot-following cursor</div>
+    </div>
+    <!-- From Karen Ann's code snippets library on canvas -->
+    <div class="card" onclick="expandManualIframe('Inverted stretched camera', 'Excercises/Excercise3/index.html')">
+      <div class="title">Inverted stretched camera</div>
+      <div class="thumb"><img src="img/Excercise3.gif" alt="Inverted stretched camera"></div>
+      <div class="desc">Distortion, INVERT filter</div>
+    </div>
+    <!-- From Karen Ann's code snippets library on canvas -->
+    <div class="card" onclick="expandManualIframe('Image cursor', 'Excercises/Excercise4/index.html')">
+      <div class="title">Image cursor</div>
+      <div class="thumb"><img src="img/Excercise4.gif" alt="Image cursor"></div>
+      <div class="desc">Me and Conan hehe</div>
+    </div>
+    <!-- From Karen Ann's code snippets library on canvas -->
+    <div class="card" onclick="expandManualIframe('Circle and square crossed lovers', 'Excercises/Excercise5/index.html')">
+      <div class="title">Circle and square crossed lovers</div>
+      <div class="thumb"><img src="img/Excercise5.gif" alt="Circle and square crossed lovers"></div>
+      <div class="desc">Except they actually can meet...</div>
+    </div>
+    <!-- From Karen Ann's code snippets library on canvas -->
+    <div class="card" onclick="expandManualIframe('FLASHING GHOST', 'Excercises/Excercise6/index.html')">
+      <div class="title">FLASHING GHOST</div>
+      <div class="thumb"><img src="img/Excercise6.gif" alt="FLASHING GHOST"></div>
+      <div class="desc">Alternating inverted & normal camera</div>
+    </div>
+    <!-- From the p5.js Contributors - https://p5js.org/examples/calculating-values-clock/ -->
+    <div class="card" onclick="expandManualIframe('Clock', 'Excercises/Excercise7/index.html')">
+      <div class="title">Clock</div>
+      <div class="thumb"><img src="img/Excercise7.gif" alt="Clock"></div>
+      <div class="desc">Live data clock</div>
+    </div>
+    <!-- From Karen Ann's code snippets library on canvas -->
+    <div class="card" onclick="expandManualIframe('hiiiiiiiii', 'Excercises/Excercise8/index.html')">
+      <div class="title">hiiiiiiiii</div>
+      <div class="thumb"><img src="img/Excercise8.gif" alt="hiiiiiiiii"></div>
+      <div class="desc">Mouse position spinner</div>
+    </div>
+    <!-- From the p5.js Contributors - https://p5js.org/examples/repetition-kaleidoscope/ -->
+    <div class="card" onclick="expandManualIframe('Kaleidescope', 'Excercises/Excercise9/index.html')">
+      <div class="title">Kaleidescope</div>
+      <div class="thumb"><img src="img/Excercise9.gif" alt="Kaleidescope"></div>
+      <div class="desc">Mouse-clicked kaleidescope drawing</div>
+    </div>
+    <!-- From Karen Ann's code snippets library on canvas -->
+    <div class="card" onclick="expandManualIframe('Sound fidget spinner', 'Excercises/Excercise10/index.html')">
+      <div class="title">Sound fidget spinner</div>
+      <div class="thumb"><img src="img/Excercise10.gif" alt="Sound fidget spinner"></div>
+      <div class="desc">Music-responsive text (PLS DONT FAIL ME)</div>
+    </div>
+    <!-- From the p5.js Contributors - https://editor.p5js.org/codingtrain/sketches/3HVrL9m36 -->
+    <div class="card" onclick="expandManualIframe('Data visualisation', 'Excercises/Excercise11/index.html')">
+      <div class="title">Data visualisation</div>
+      <div class="thumb"><img src="img/Excercise11.gif" alt="Data visualisation"></div>
+      <div class="desc">Moving data visualisation</div>
+    </div>
+  </main>
+
+  <div id="projectExpanded" class="expanded">
+    <button onclick="closeProject()">Close ✕</button>
+    <h2 id="projectTitle"></h2>
+    <div id="iframeContainer" style="flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;"></div>
+  </div>
+
+  <script>
+    function expandImage(imagePath, title) {
+      document.getElementById('projectExpanded').style.display = 'flex';
+      document.getElementById('projectTitle').innerText = title;
+      const container = document.getElementById('iframeContainer');
+      container.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = 'img/' + imagePath;
+      container.appendChild(img);
+    }
+
+    function expandManualIframe(title, url) {
+      document.getElementById('projectExpanded').style.display = 'flex';
+      document.getElementById('projectTitle').innerText = title;
+      const container = document.getElementById('iframeContainer');
+      container.innerHTML = '';
+      const iframe = document.createElement('iframe');
+      iframe.src = url;
+      iframe.allowFullscreen = true;
+      container.appendChild(iframe);
+    }
+
+    function closeProject() {
+      document.getElementById('projectExpanded').style.display = 'none';
+      document.getElementById('iframeContainer').innerHTML = '';
+    }
+  </script>
+
+
+  </script>
+<!-- chatgpt -->
+  <div id="custom-cursor"></div>
+  <script>
+    const cursor = document.getElementById("custom-cursor");
+    document.addEventListener("mousemove", (e) => {
+      cursor.style.top = `${e.clientY}px`;
+      cursor.style.left = `${e.clientX}px`;
+    });
+    document.addEventListener("mousedown", () => {
+      cursor.style.transform = "scale(2)";
+      cursor.style.border = "1px solid black";
+      cursor.style.backgroundColor = "transparent";
+    });
+    document.addEventListener("mouseup", () => {
+      cursor.style.transform = "scale(1)";
+      cursor.style.border = "none";
+      cursor.style.backgroundColor = "black";
+    });
+  </script>
+</body>
+</html>
